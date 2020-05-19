@@ -35,19 +35,38 @@ def parse_packet(res):
 		break
 	pass
 
+'''
+var Request = {
+    START_GAME: 0x00,
+    TERMINATE_GAME: 0x01,
+    ASK_QUESTION: 0x02,
+    GET_LETTER: 0x03,
+    GUESS: 0x04,
+    GET_REMAIN_TIME: 0x05
+}
+'''
 
 def send_response(s):
 	while True:
 		data = input()
 		if data == '+S':
-			s.send(b'\0x00')
+			s.send(b'\0')
 		if data == '+Q':
-			s.send(b'\0x01')
+			s.send(b'\2')
+		if data == '+L':
+			s.send(b'\3')
+		if data == 'q':
+			print('send data' + data)
+			s.send(b'\1')
+		if data == '+T':
+			print('send data' + data)
+			s.send(b'\5')
 
 		s.send(str.encode(data))
 	pass
 
-print("+s Starts The Game\n " +
+print(
+	"+s Starts The Game\n " +
 	"exit: terminate the game\n" +
 	"+Q: get a new question\n" +
 	"+L: get a letter\n" +
