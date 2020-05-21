@@ -9,8 +9,8 @@ import sys
 1773
 '''
 
-host = '160.75.154.73'
-#host = '127.0.0.1'
+#host = '160.75.154.73'
+host = '127.0.0.1'
 port = 1773
 
 
@@ -77,8 +77,8 @@ def send_response(s):
 		if data == '+T':
 			print('send data' + data)
 			s.send(b'\5')
-		s.send(str.encode(data))
-	pass
+		s.send(b'\4\x41')
+		break
 
 print(
 	"+s Starts The Game\n " +
