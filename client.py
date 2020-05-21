@@ -9,8 +9,8 @@ import sys
 1773
 '''
 
-#host = '160.75.154.73'
-host = '127.0.0.1'
+host = '160.75.154.73'
+# ~ host = '127.0.0.1'
 port = 1773
 
 
@@ -66,19 +66,20 @@ def send_response(s):
 	while True:
 		data = input()
 		if data == '+S':
-			s.send(b'\0')
-		if data == '+Q':
-			s.send(b'\2')
-		if data == '+L':
-			s.send(b'\3')
-		if data == 'q':
+			s.send(b'\x00')
+		elif data == '+Q':
+			s.send(b'\x02')
+		elif data == '+L':
+			s.send(b'\x03')
+		elif data == 'q':
 			print('send data' + data)
-			s.send(b'\1')
-		if data == '+T':
+			s.send(b'\x01')
+		elif data == '+T':
 			print('send data' + data)
-			s.send(b'\5')
-		s.send(b'\4\x41')
-		break
+			s.send(b'\x05')
+		else:
+			s.send(b'\x04' + data.encode())
+
 
 print(
 	"+s Starts The Game\n " +
