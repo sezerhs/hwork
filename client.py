@@ -9,8 +9,8 @@ import sys
 1773
 '''
 
-host = '160.75.154.73'
-# ~ host = '127.0.0.1'
+# ~ host = '160.75.154.73'
+host = '127.0.0.1'
 port = 1773
 
 
@@ -47,7 +47,9 @@ def parse_packet(res):
 			## maybe after check this line
 			print(str.encode('recevied time ==========> ' + str(time)))
 		else:
-			print(res)
+			print(res.decode('utf-8'))
+			# ~ print(res)
+			pass
 		break
 	pass
 
@@ -71,22 +73,21 @@ def send_response(s):
 			s.send(b'\x02')
 		elif data == '+L':
 			s.send(b'\x03')
-		elif data == 'q':
-			print('send data' + data)
+		elif data == 'exit':
 			s.send(b'\x01')
 		elif data == '+T':
-			print('send data' + data)
 			s.send(b'\x05')
 		else:
 			s.send(b'\x04' + data.encode())
 
-
 print(
-	"+s Starts The Game\n " +
+	"=============================\n" +
+	"+S Starts The Game\n " +
 	"exit: terminate the game\n" +
 	"+Q: get a new question\n" +
 	"+L: get a letter\n" +
-	"+t: get a remaining time\n")
+	"+T: get a remaining time\n" +
+	"===============================\n")
 
 with socket.socket(socket.AF_INET,socket.SOCK_STREAM) as s:
 	s.connect((host, port))
