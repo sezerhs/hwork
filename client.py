@@ -1,9 +1,16 @@
 import socket
 import hashlib
 import threading 
+from struct import *
+import sys
 
+'''
+160.75.154.73
+1773
+'''
 
-host = '127.0.0.1'
+host = '160.75.154.73'
+#host = '127.0.0.1'
 port = 1773
 
 
@@ -18,7 +25,7 @@ def mergesha(hexcode):
 
 
 def authenticate(s):
-	s.send(str.encode('start'))
+	s.send(str.encode('Start_Connection'))
 	while True:
 		res = s.recv(1024).decode('utf-8')
 		if(len(res) == 32):
@@ -31,7 +38,16 @@ def authenticate(s):
 
 def parse_packet(res):
 	while True:
-		print(res)
+		packetsize = sys.getsizeof(res)
+		if(packetsize == 39):
+			##remaing time
+			MessageHeader  = res[0:4]
+			Message  = res[4:6]
+			time = unpack('h',Message)[0]
+			## maybe after check this line
+			print(str.encode('recevied time ==========> ' + str(time)))
+		else:
+			print(res)
 		break
 	pass
 
@@ -61,7 +77,6 @@ def send_response(s):
 		if data == '+T':
 			print('send data' + data)
 			s.send(b'\5')
-
 		s.send(str.encode(data))
 	pass
 
