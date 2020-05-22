@@ -9,8 +9,8 @@ import sys
 1773
 '''
 
-# ~ host = '160.75.154.73'
-host = '127.0.0.1'
+host = '160.75.154.73'
+#host = '127.0.0.1'
 port = 1773
 
 
@@ -46,9 +46,20 @@ def parse_packet(res):
 			time = unpack('h',Message)[0]
 			## maybe after check this line
 			print(('recevied time ==========> ' + str(time)))
+		elif res[0:1] == b'\x01':
+			print(str.encode('================HEADER x01 ====================='))
+			try:
+				print(res.decode('utf-8'))
+			except:
+				print(res.decode('utf-16'))
+		elif res[0:1] == b'\x00':
+			print(str.encode('================HEADER x00 ====================='))
+			try:
+				print(res.decode('utf-8'))
+			except:
+				print(res.decode('utf-16'))
 		else:
 			print(res.decode('utf-8'))
-			# ~ print(res)
 			pass
 		break
 	pass
