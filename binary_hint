@@ -1,4 +1,6 @@
 from - hex
 ---------------------------------------------
+text = b'\x05\x73\x65\x7a\x65\x72'
+
 length = struct.unpack("B", text[0:1])[0]
 gvrTxt = struct.unpack("%ds" % length, text[1:][0]
