@@ -1,0 +1,4 @@
+from - hex
+---------------------------------------------
+length = struct.unpack("B", text[0:1])[0]
+gvrTxt = struct.unpack("%ds" % length, text[1:][0]
