@@ -45,7 +45,7 @@ def parse_packet(res):
 			Message  = res[4:6]
 			time = unpack('h',Message)[0]
 			## maybe after check this line
-			print(str.encode('recevied time ==========> ' + str(time)))
+			print(('recevied time ==========> ' + str(time)))
 		else:
 			print(res.decode('utf-8'))
 			# ~ print(res)
