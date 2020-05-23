@@ -13,7 +13,8 @@ host = '160.75.154.73'
 #host = '127.0.0.1'
 port = 1773
 
-
+# sunucudan gelen random data ile ogrenci datasi birlestiriliyor daha sonra bu data sha1 fonksiyonundan
+# geciyor sha1 sonrasi ogrenci idsi data sonuna # ile ekleniyor ve sunucuya gonderiliyor.
 shex = '56617FAC7294D0CBF74951BF7B8F078F'
 def mergesha(hexcode):
 	hexcode  = bytes(hexcode,'utf8')
@@ -23,7 +24,8 @@ def mergesha(hexcode):
 	results = h.hexdigest()
 	return results + '#' + sid
 
-
+# authentication burada eger data 32 uzunlugundaysa yani random data gercekten varsa 
+# authentication fonsksiyonu ve mergesha fonksiyonu calisir.
 def authenticate(s):
 	s.send(str.encode('Start_Connection'))
 	while True:
@@ -35,7 +37,8 @@ def authenticate(s):
 			s.send(str.encode(sha))
 		break
 
-
+# sunucu tarafindan gelen her data binary olarak geldigi icin buradaki,
+# mesaj basliklarina gore paketler decode ediliyor.
 def parse_packet(res):
 	while True:
 		packetsize = sys.getsizeof(res)
@@ -74,6 +77,8 @@ var Request = {
     GET_REMAIN_TIME: 0x05
 }
 '''
+# sunucuya mesaj gonderebilmek icin binary data gonderen fonksiyondur.
+# burada girilen her degerin karsi sunucuda karsiligi var.
 
 def send_response(s):
 	while True:
@@ -99,7 +104,7 @@ print(
 	"+L: get a letter\n" +
 	"+T: get a remaining time\n" +
 	"===============================\n")
-
+# socket islemleri burada yapilir sunucuya baglanma ve authentication fonksiyonu.
 with socket.socket(socket.AF_INET,socket.SOCK_STREAM) as s:
 	s.connect((host, port))
 	authenticate(s)
