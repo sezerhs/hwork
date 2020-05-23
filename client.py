@@ -53,8 +53,10 @@ def parse_packet(res):
 			print(str.encode('================HEADER x01 ====================='))
 			try:
 				print(res.decode('utf-8'))
+				print('size of the word:' + str(res[4]))
 			except:
 				print(res.decode('utf-16'))
+				print('size of the word:' + str(res[5]))
 		elif res[0:2] == b'\x02\x00':
 			print(str.encode('================HEADER x02 ====================='))
 			hint = unpack('bs',res[2:])
