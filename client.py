@@ -55,6 +55,10 @@ def parse_packet(res):
 				print(res.decode('utf-8'))
 			except:
 				print(res.decode('utf-16'))
+		elif res[0:2] == b'\x02\x00':
+			print(str.encode('================HEADER x02 ====================='))
+			hint = unpack('bs',res[2:])
+			print(('Letter Recevied =======>' + str(hint[0]) + " " + (hint[1]).decode('utf-8') ))
 		elif res[0:1] == b'\x00':
 			print(str.encode('================HEADER x00 ====================='))
 			try:
