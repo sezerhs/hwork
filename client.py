@@ -70,9 +70,9 @@ def parse_packet(res):
 		elif res[0:1] == b'\x00':
 			print(str.encode('================HEADER x00 ====================='))
 			try:
-				print(res[3:].decode('utf-8'))
+				print(res.decode('utf-8'))
 			except:
-				print(res[3:].decode('utf-16'))
+				print(res.decode('utf-16'))
 		else:
 			print(res.decode('utf-8'))
 			pass
