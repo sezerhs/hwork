@@ -39,6 +39,8 @@ def authenticate(s):
 
 # sunucu tarafindan gelen her data binary olarak geldigi icin buradaki,
 # mesaj basliklarina gore paketler decode ediliyor.
+
+
 def parse_packet(res):
 	while True:
 		packetsize = sys.getsizeof(res)
@@ -55,8 +57,12 @@ def parse_packet(res):
 				print(res.decode('utf-8'))
 				print('size of the word:' + str(res[4]))
 			except:
-				print(res.decode('utf-16'))
-				print('size of the word:' + str(res[5]))
+				try:
+					print(res.decode('utf-16-le'))
+					print('size of the word:' + str(res[5]))
+				except:
+					print(res.decode('utf-16'))
+					print('size of the word:' + str(res[5]))
 		elif res[0:2] == b'\x02\x00':
 			print(str.encode('================HEADER x02 ====================='))
 			hint = unpack('bs',res[2:])
@@ -64,9 +70,9 @@ def parse_packet(res):
 		elif res[0:1] == b'\x00':
 			print(str.encode('================HEADER x00 ====================='))
 			try:
-				print(res.decode('utf-8'))
+				print(res[3:].decode('utf-8'))
 			except:
-				print(res.decode('utf-16'))
+				print(res[3:].decode('utf-16'))
 		else:
 			print(res.decode('utf-8'))
 			pass
