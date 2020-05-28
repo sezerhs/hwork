@@ -10,7 +10,7 @@ import sys
 '''
 
 host = '160.75.154.73'
-#host = '127.0.0.1'
+# ~ host = '127.0.0.1'
 port = 1773
 
 # sunucudan gelen random data ile ogrenci datasi birlestiriliyor daha sonra bu data sha1 fonksiyonundan
@@ -39,41 +39,47 @@ def authenticate(s):
 
 # sunucu tarafindan gelen her data binary olarak geldigi icin buradaki,
 # mesaj basliklarina gore paketler decode ediliyor.
-
-
 def parse_packet(res):
 	while True:
-		packetsize = sys.getsizeof(res)
-		if(packetsize == 39):
+		if(res[0:2] == b'\x03\x00'):
 			##remaing time
 			MessageHeader  = res[0:4]
 			Message  = res[4:6]
 			time = unpack('h',Message)[0]
-			## maybe after check this line
 			print(('recevied time ==========> ' + str(time)))
-		elif res[0:1] == b'\x01':
-			print(str.encode('================HEADER x01 ====================='))
+		elif res[0:2] == b'\x04\x00':
+			# exit
+			scoreAndtime = unpack('hh',res[2:])
+			print(('Game over your score:' + str(scoreAndtime[0]) + " And time:" + str(scoreAndtime[1]) ))
+		elif res[0:2] == b'\x01\x00':
+			print(str.encode('================HEADER x01 utf8 ====================='))
 			try:
 				print(res.decode('utf-8'))
 				print('size of the word:' + str(res[4]))
 			except:
+				print(res)
+				print('size of the word:' + str(res[4]))
+		elif res[0:2] == b'\x01\x01':
+				print(str.encode('================HEADER x01 utf16le ====================='))
 				try:
-					print(res.decode('utf-16-le'))
-					print('size of the word:' + str(res[5]))
+					print(res.decode('utf-16le'))
+					print('size of the word:' + str(res[4]))
 				except:
-					print(res.decode('utf-16'))
+					print(res)
 					print('size of the word:' + str(res[5]))
 		elif res[0:2] == b'\x02\x00':
-			print(str.encode('================HEADER x02 ====================='))
+			# ~ print(str.encode('================HEADER x02 ====================='))
 			hint = unpack('bs',res[2:])
 			print(('Letter Recevied =======>' + str(hint[0]) + " " + (hint[1]).decode('utf-8') ))
 		elif res[0:1] == b'\x00':
-			print(str.encode('================HEADER x00 ====================='))
+			print(str.encode('================HEADER x00 uft8 ====================='))
 			try:
-				print(res.decode('utf-8'))
+				print(res[3:].decode('utf-8'))
 			except:
-				print(res.decode('utf-16'))
+				print(str.encode('================HEADER x00 uft16 ====================='))
+				print(res[3:].decode('utf-16-le'))
 		else:
+			#success message
 			print(res.decode('utf-8'))
 			pass
 		break
@@ -91,7 +97,6 @@ var Request = {
 '''
 # sunucuya mesaj gonderebilmek icin binary data gonderen fonksiyondur.
 # burada girilen her degerin karsi sunucuda karsiligi var.
-
 def send_response(s):
 	while True:
 		data = input()
@@ -127,5 +132,5 @@ with socket.socket(socket.AF_INET,socket.SOCK_STREAM) as s:
 
 	while True:
 		# ~ res = s.recv(1024)
-		res = s.recv(1024)
+		res = s.recv(10000000)
 		parse_packet(res)
