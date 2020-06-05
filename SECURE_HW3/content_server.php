@@ -13,7 +13,8 @@ $divMessage = "Busra's Insecure File Contents Server";
 if(@$_SESSION['msg'] == 'Login Failure'){
   unset($_SESSION['msg']);
 }
-if(@$_SESSION['msg'] == 1){
+
+if(@$_SESSION['successMessage'] == 1){
   unset($_SESSION['successMessage']);
 }
 
@@ -112,9 +113,6 @@ if(isset($_POST['file'])){
    //ama yoksa login formu tekrar acilir.
     if(@$_SESSION["login"] !== "ok" &&  !(@$error))  {?>
 	<div><h1><?=$divMessage;?></h1></div><br>
-	<?php if(isset($_SESSION['successMessage'])){
-    	 echo "<div><h1>(Successfully Logged In!)</h1></div>";
-    } ?>
     <div id="loginMains">
            <form name="login" action="content_server.php" method="post">
               <div id="loginForm">
@@ -129,10 +127,13 @@ if(isset($_POST['file'])){
         <?php 
         //eger login varsa file load bolumu gosteriliyor.
         if(isset($_SESSION['login'])){?>
-<div><h1><?=$divMessage;?></h1></div><br>
+<div><h1><?=$divMessage;?></h1></div>
+	<?php if(isset($_SESSION['successMessage'])){
+    	 echo "<div><h1>(Successfully Logged In!)</h1></div>";
+    } ?>
     <div id="loginMains">
            <form name="file" action="content_server.php" method="post">
-             <textarea name="file_content" rows="10" cols="90" ><?=@$content;?></textarea><br>
+             <textarea name="file_content" rows="20" cols="100" ><?=@$content;?></textarea><br>
                File Name:<input type="text" value="<?=!empty($filename) ? $filename : null ?>" name="file_name"><input type="submit" name="file" value="Load File">
                <input type="submit" name="exit" value="logoff">
             </div>
@@ -141,3 +142,4 @@ if(isset($_POST['file'])){
 </body>
 
 </html>
+
