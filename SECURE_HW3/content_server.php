@@ -1,14 +1,26 @@
 <?php
 #your id
 
+#bir session baslatalim burasi user login oldugunda ayni
+#sayfada kalmasi ve login oldugunu anlamamizi sagliyor.
+
 session_start();
 
+//div alanlarinda gosterilen mesaj
+$divMessage = "Busra's Insecure File Contents Server";
+
+#Session'daki mesaj basarisiz bir login ise tum mesajlari kaldiriyoruz.
 if(@$_SESSION['msg'] == 'Login Failure'){
   unset($_SESSION['msg']);
 }
 
 #this function // pull the userList file and check the user information..
 #if you run this function you send two argv userpass ..
+#bu fonksiyon tek bir paremetre aliyor oda sadece
+#username alinan paremetre post esnasinda username:parola seklinde bu fonksiyona gonderiliyor.
+#daha sonra fonksiyon ilgli dosyayi boslukdan ve satir sonunda ayirip username:password halinde array'a atiliyor.
+#in arrray yardimiyla user listesi kontrol ediliyor.
+#herhangi bir hatada buradaki fonksiyon false donecek.
 function userControl($userpass){
   if(empty($userpass)){
     return;
@@ -31,6 +43,9 @@ function userControl($userpass){
   return false;
 }
 
+#eger postla gelen islem login ise form datasindan gelen username ve parola 
+#user ve pass seklinde degiskene atiliyor. daha sonra ilgli fonksiyon cagiriliyor.
+#basarili yada basarisizsa session'daki msg alanlari guncelleniyor ve kullaniciya gosteriliyor.
 if(isset($_POST['login'])){
   #if there is post , we process start // here
   #i will checking.. user userfile...
@@ -48,12 +63,19 @@ if(isset($_POST['login'])){
   }
 
 }
+
+#eger kullanici cikis yapiyorsa session ve cookie paremetreleri siliniyor.
+# ve kullanici yeniden ayni sayfaya yonlendiriyor.
 if(isset($_POST['exit'])){
   session_destroy();
   setcookie('Files', null, -1, '/'); 
   header('Location: content_server.php');
 }
 
+
+#eger kullanici bir dosya cagiriyorsa dosya adi filename degiskenine setleniyor
+#files dizini altinda ilgli dosya varsa dosya content alaninda gosteriliyor.
+#ve kullanici her cagirim yaptiginda files cookie'sinin icine yaziliyor.
 if(isset($_POST['file'])){
   #this line for security to directory traversel.. if you  open insecure you can open without basename;
   #$filename = basename($_POST['file_name']);
@@ -74,9 +96,6 @@ if(isset($_POST['file'])){
   $filename = $_POST['file_name'];
 }
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
 <head>
    <title><?=empty($_SESSION['msg']) ? "Login" : $_SESSION['msg'];  ?></title>
@@ -84,8 +103,11 @@ if(isset($_POST['file'])){
 	<meta name="generator" content="" />
 </head>
 <body>
-   <?php if(@$_SESSION["login"] !== "ok" &&  !(@$error))  {?>
-	<div><h1>Tacettin's Insecure File Contents Server</h1></div><br>
+   <?php
+   //herhangi bir hata yoksa ve session login'e ait bir durum yoksa login sayfasi tekrar gosteriliyor
+   //ama yoksa login formu tekrar acilir.
+    if(@$_SESSION["login"] !== "ok" &&  !(@$error))  {?>
+	<div><h1><?=$divMessage;?></h1></div><br>
     <div id="loginMains">
            <form name="login" action="content_server.php" method="post">
               <div id="loginForm">
@@ -97,8 +119,10 @@ if(isset($_POST['file'])){
                       <?php }else{
 
 } ?>
-        <?php if(isset($_SESSION['login'])){?>
-<div><h1>Tacettin's Insecure File Contents Server</h1></div><br>
+        <?php 
+        //eger login varsa file load bolumu gosteriliyor.
+        if(isset($_SESSION['login'])){?>
+<div><h1><?=$divMessage;?></h1></div><br>
     <div id="loginMains">
            <form name="file" action="content_server.php" method="post">
              <textarea name="file_content" rows="10" cols="50" ><?=@$content;?></textarea><br>
