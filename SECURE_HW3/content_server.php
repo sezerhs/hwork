@@ -128,10 +128,10 @@ if(isset($_POST['file'])){
         //eger login varsa file load bolumu gosteriliyor.
         if(isset($_SESSION['login'])){?>
 <div><h1><?=$divMessage;?></h1></div>
-File Contents:
 	<?php if(isset($_SESSION['successMessage'])){
     	 echo "<div><h1>(Successfully Logged In!)</h1></div>";
     } ?>
+File Contents:
     <div id="loginMains">
            <form name="file" action="content_server.php" method="post">
              <textarea name="file_content" rows="20" cols="100" ><?=@$content;?></textarea><br>
