@@ -128,6 +128,7 @@ if(isset($_POST['file'])){
         //eger login varsa file load bolumu gosteriliyor.
         if(isset($_SESSION['login'])){?>
 <div><h1><?=$divMessage;?></h1></div>
+File Contents:
 	<?php if(isset($_SESSION['successMessage'])){
     	 echo "<div><h1>(Successfully Logged In!)</h1></div>";
     } ?>
