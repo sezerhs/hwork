@@ -13,6 +13,9 @@ $divMessage = "Busra's Insecure File Contents Server";
 if(@$_SESSION['msg'] == 'Login Failure'){
   unset($_SESSION['msg']);
 }
+if(@$_SESSION['msg'] == 1){
+  unset($_SESSION['successMessage']);
+}
 
 #this function // pull the userList file and check the user information..
 #if you run this function you send two argv userpass ..
@@ -55,6 +58,7 @@ if(isset($_POST['login'])){
     if(userControl("$user:$pass")){
       $_SESSION["login"] = "ok";
       $_SESSION['msg'] = "Successfull Login";
+      $_SESSION['successMessage'] = 1;
     }else{
       echo  "<h1>username or password not correct,please try again!</h1>";
       $_SESSION['msg'] = "Login Failure";
@@ -108,6 +112,9 @@ if(isset($_POST['file'])){
    //ama yoksa login formu tekrar acilir.
     if(@$_SESSION["login"] !== "ok" &&  !(@$error))  {?>
 	<div><h1><?=$divMessage;?></h1></div><br>
+	<?php if(isset($_SESSION['successMessage'])){
+    	 echo "<div><h1>(Successfully Logged In!)</h1></div>";
+    } ?>
     <div id="loginMains">
            <form name="login" action="content_server.php" method="post">
               <div id="loginForm">
@@ -125,7 +132,7 @@ if(isset($_POST['file'])){
 <div><h1><?=$divMessage;?></h1></div><br>
     <div id="loginMains">
            <form name="file" action="content_server.php" method="post">
-             <textarea name="file_content" rows="10" cols="50" ><?=@$content;?></textarea><br>
+             <textarea name="file_content" rows="10" cols="90" ><?=@$content;?></textarea><br>
                File Name:<input type="text" value="<?=!empty($filename) ? $filename : null ?>" name="file_name"><input type="submit" name="file" value="Load File">
                <input type="submit" name="exit" value="logoff">
             </div>
